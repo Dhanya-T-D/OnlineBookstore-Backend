@@ -12,24 +12,24 @@ public class CategoryModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cat_id")
-    private Long cat_id;
+    private Long catId;
 
     @Column(name = "cat_name")
-    private String cat_name;
+    private String catName;
 
-    public Long getCat_id() {
-        return cat_id;
+    public Long getCatId() {
+        return catId;
     }
 
-    public void setCat_id(Long cat_id) {
-        this.cat_id = cat_id;
+    public void setCatId(Long catId) {
+        this.catId = catId;
     }
 
-    public String getCat_name() {
-        return cat_name;
+    public String getCatName() {
+        return catName;
     }
 
-    public void setCat_name(String cat_name) {
-        this.cat_name = cat_name;
+    public void setCatName(String catName) {
+        this.catName = catName;
     }
 }

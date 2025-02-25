@@ -10,4 +10,6 @@ public interface PubRepo extends JpaRepository<PubModel,Long> {
 
     Optional<PubModel> findByEmailAndPassword(String email, String password);
     boolean existsByEmail(String email);
+
+    Optional<PubModel> findByEmail(String email);
 }

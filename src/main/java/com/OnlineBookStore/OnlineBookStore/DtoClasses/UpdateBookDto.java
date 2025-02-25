@@ -13,13 +13,14 @@ public class UpdateBookDto {
 
 
     private String author;
-    private Integer available_copies;
+    private Integer availableCopies;
     private  String bookName;
     private Long catId;
+    private Long languageId;
     private BigDecimal price;
-    private LocalDate published_date;
+    private LocalDate publishedDate;
     private Integer edition;
-    private String language;
+
 
     public String getAuthor() {
         return author;
@@ -29,12 +30,12 @@ public class UpdateBookDto {
         this.author = author;
     }
 
-    public Integer getAvailable_copies() {
-        return available_copies;
+    public Integer getAvailableCopies() {
+        return availableCopies;
     }
 
-    public void setAvailable_copies(Integer available_copies) {
-        this.available_copies = available_copies;
+    public void setAvailableCopies(Integer availableCopies) {
+        this.availableCopies = availableCopies;
     }
 
     public String getBookName() {
@@ -53,6 +54,14 @@ public class UpdateBookDto {
         this.catId = catId;
     }
 
+    public Long getLanguageId() {
+        return languageId;
+    }
+
+    public void setLanguageId(Long languageId) {
+        this.languageId = languageId;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -61,12 +70,12 @@ public class UpdateBookDto {
         this.price = price;
     }
 
-    public LocalDate getPublished_date() {
-        return published_date;
+    public LocalDate getPublishedDate() {
+        return publishedDate;
     }
 
-    public void setPublished_date(LocalDate published_date) {
-        this.published_date = published_date;
+    public void setPublishedDate(LocalDate publishedDate) {
+        this.publishedDate = publishedDate;
     }
 
     public Integer getEdition() {
@@ -75,13 +84,5 @@ public class UpdateBookDto {
 
     public void setEdition(Integer edition) {
         this.edition = edition;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
     }
 }

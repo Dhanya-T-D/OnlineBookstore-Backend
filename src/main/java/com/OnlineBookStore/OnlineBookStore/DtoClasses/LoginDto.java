@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public class LoginDto {
 private Long id;
 private String name;
+private Long roleId;
 private String role;
-
-
+private Long statusId;
+private String statusName;
 
 
     public Long getId() {
@@ -31,11 +32,35 @@ private String role;
         this.name = name;
     }
 
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
     public String getRole() {
         return role;
     }
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Long getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(Long statusId) {
+        this.statusId = statusId;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
     }
 }

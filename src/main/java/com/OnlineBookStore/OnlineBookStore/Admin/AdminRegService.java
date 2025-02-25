@@ -3,6 +3,8 @@ package com.OnlineBookStore.OnlineBookStore.Admin;
 import com.OnlineBookStore.OnlineBookStore.Category.CategoryModel;
 import com.OnlineBookStore.OnlineBookStore.Category.CategoryRepo;
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.LoginRequest;
+import com.OnlineBookStore.OnlineBookStore.Language.LanguageModel;
+import com.OnlineBookStore.OnlineBookStore.Language.LanguageRepo;
 import com.OnlineBookStore.OnlineBookStore.status.StatusModel;
 import com.OnlineBookStore.OnlineBookStore.status.StatusRepo;
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.LoginDto;
@@ -16,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.management.openmbean.OpenMBeanInfo;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +45,12 @@ public class AdminRegService {
     @Autowired
     private StatusRepo statusRepo;
 
-    //    add new admin
+    @Autowired
+    private LanguageRepo languageRepo;
+
+
+
+    //    admin registration
     public ResponseEntity<?> addAdmin(AdminRegModel adminRegModel) {
         AdminRegModel adminRegModel1 = new AdminRegModel();
         adminRegModel1.setAdmin_name(adminRegModel.getAdmin_name());
@@ -52,53 +61,6 @@ public class AdminRegService {
         return new ResponseEntity<>(adminRegModel1, HttpStatus.OK);
     }
 
-
-//    //    admin login
-//    public ResponseEntity<?> adminLogin(String email, String password) {
-//        Optional<AdminRegModel> adminRegModelOptional = adminRegRepo.findByEmailAndPassword(email, password);
-//        Optional<PubModel> pubModelOptional = pubRepo.findByEmailAndPassword(email, password);
-//        Optional<UserModel> userModelOptional = userRepo.findByEmailAndPassword(email, password);
-//        if (adminRegModelOptional.isPresent()) {
-//            AdminRegModel adminRegModel = adminRegModelOptional.get();
-//            LoginDto loginDto = new LoginDto();
-//            loginDto.setId(adminRegModel.getAdmin_id());
-//            Optional<RoleModel> roleModelOptional = roleRepo.findById(adminRegModel.getRoleid());
-//            if (roleModelOptional.isPresent()) {
-//                RoleModel roleModel = roleModelOptional.get();
-//                loginDto.setRole(roleModel.getRoleName());
-//            }
-//            loginDto.setName(adminRegModel.getAdmin_name());
-//
-//            return new ResponseEntity<>(loginDto, HttpStatus.OK);
-//        } else if (pubModelOptional.isPresent()) {
-//            PubModel pubModel = pubModelOptional.get();
-//            LoginDto loginDto = new LoginDto();
-//            loginDto.setId(pubModel.getPubId());
-//            Optional<RoleModel> roleModelOptional = roleRepo.findById(pubModel.getRoleid());
-//            if (roleModelOptional.isPresent()) {
-//                RoleModel roleModel = roleModelOptional.get();
-//                loginDto.setRole(roleModel.getRoleName());
-//            }
-//            loginDto.setName(pubModel.getPub_name());
-//
-//            return new ResponseEntity<>(loginDto, HttpStatus.OK);
-//        } else if (userModelOptional.isPresent()) {
-//            UserModel userModel = userModelOptional.get();
-//            LoginDto loginDto = new LoginDto();
-//            loginDto.setId(userModel.getUserid());
-//            Optional<RoleModel> roleModelOptional = roleRepo.findById(userModel.getRoleid());
-//            if (roleModelOptional.isPresent()) {
-//                RoleModel roleModel = roleModelOptional.get();
-//                loginDto.setRole(roleModel.getRoleName());
-//            }
-//            loginDto.setName(userModel.getUsername());
-//
-//            return new ResponseEntity<>(loginDto, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>("Incorrect Login Details", HttpStatus.BAD_REQUEST);
-//        }
-//
-//    }
 
     //   --------------login---------------------------
 
@@ -114,6 +76,7 @@ public class AdminRegService {
             Optional<RoleModel> roleModelOptional = roleRepo.findById(adminRegModel.getRoleid());
             if (roleModelOptional.isPresent()) {
                 RoleModel roleModel = roleModelOptional.get();
+                loginDto.setRoleId(adminRegModel.getRoleid());
                 loginDto.setRole(roleModel.getRoleName());
             }
             loginDto.setName(adminRegModel.getAdmin_name());
@@ -126,9 +89,18 @@ public class AdminRegService {
             Optional<RoleModel> roleModelOptional = roleRepo.findById(pubModel.getRoleid());
             if (roleModelOptional.isPresent()) {
                 RoleModel roleModel = roleModelOptional.get();
+                loginDto.setRoleId(pubModel.getRoleid());
                 loginDto.setRole(roleModel.getRoleName());
             }
+
             loginDto.setName(pubModel.getPub_name());
+            loginDto.setStatusId(pubModel.getStatusId());
+            Optional<StatusModel> statusModelOptional = statusRepo.findById(pubModel.getStatusId());
+            if (statusModelOptional.isPresent()){
+                StatusModel statusModel=statusModelOptional.get();
+                loginDto.setStatusName(statusModel.getStatusName());
+            }
+
 
             return new ResponseEntity<>(loginDto, HttpStatus.OK);
         } else if (userModelOptional.isPresent()) {
@@ -138,6 +110,7 @@ public class AdminRegService {
             Optional<RoleModel> roleModelOptional = roleRepo.findById(userModel.getRoleid());
             if (roleModelOptional.isPresent()) {
                 RoleModel roleModel = roleModelOptional.get();
+                loginDto.setRoleId(roleModel.getRoleid());
                 loginDto.setRole(roleModel.getRoleName());
             }
             loginDto.setName(userModel.getUsername());
@@ -149,11 +122,35 @@ public class AdminRegService {
 
     }
 
+    // --------------------forgot password ---------------------
+    public ResponseEntity<?> forgotPassword(String email, String password) {
+        Optional<AdminRegModel>adminRegModelOptional=adminRegRepo.findByEmail(email);
+        Optional<PubModel>pubModelOptional=pubRepo.findByEmail(email);
+        Optional<UserModel>userModelOptional=userRepo.findByEmail(email);
+        if(adminRegModelOptional.isPresent()){
+            AdminRegModel adminRegModel=adminRegModelOptional.get();
+            adminRegModel.setPassword(password);
+            adminRegRepo.save(adminRegModel);
+            return new ResponseEntity<>("Password Updated Successfully",HttpStatus.OK);
+        } else if (pubModelOptional.isPresent()) {
+            PubModel pubModel=pubModelOptional.get();
+            pubModel.setPassword(password);
+            pubRepo.save(pubModel);
+            return new ResponseEntity<>("Password updated successfully",HttpStatus.OK);
+        }
+        else if (userModelOptional.isPresent()){
+            UserModel userModel=userModelOptional.get();
+            userModel.setPassword(password);
+            userRepo.save(userModel);
+            return new ResponseEntity<>("Password updated successfully",HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Invalid user details",HttpStatus.NOT_FOUND);
+    }
 
     //    add category
     public ResponseEntity<?> addCategory(CategoryModel categoryModel) {
         CategoryModel categoryModel1 = new CategoryModel();
-        categoryModel1.setCat_name(categoryModel.getCat_name());
+        categoryModel1.setCatName(categoryModel.getCatName());
         categoryRepo.save(categoryModel1);
         return new ResponseEntity<>(categoryModel1, HttpStatus.OK);
     }
@@ -176,7 +173,7 @@ public class AdminRegService {
         Optional<CategoryModel> categoryModelOptional = categoryRepo.findById(catId);
         if (categoryModelOptional.isPresent()) {
             CategoryModel categoryModel = categoryModelOptional.get();
-            categoryModel.setCat_name(catName);
+            categoryModel.setCatName(catName);
             categoryRepo.save(categoryModel);
             return new ResponseEntity<>("Category Updated Successfully", HttpStatus.OK);
         } else
@@ -262,6 +259,43 @@ public class AdminRegService {
         return new ResponseEntity<>(statusModels, HttpStatus.OK);
     }
 
+// add language
+    public ResponseEntity<?> addLanguage(LanguageModel languageModel) {
+        LanguageModel languageModel1=new LanguageModel();
+        languageModel1.setLanguageName(languageModel.getLanguageName());
+       languageRepo.save(languageModel1);
+        return new ResponseEntity<>(languageModel1,HttpStatus.OK);
+    }
 
+// list languages
+    public ResponseEntity<List<LanguageModel>> listLanguage() {
+        List<LanguageModel>languageModels=languageRepo.findAll();
+        return new ResponseEntity<>(languageModels,HttpStatus.OK);
+    }
 
+//    delete language
+    public ResponseEntity<?> deleteLanguage(Long languageId) {
+        Optional<LanguageModel>optionalLanguageModel=languageRepo.findById(languageId);
+        if (optionalLanguageModel.isPresent()){
+            LanguageModel languageModel=optionalLanguageModel.get();
+            languageRepo.delete(languageModel);
+            return new ResponseEntity<>("Language deleted successfully",HttpStatus.OK);
+        }
+
+            return new ResponseEntity<>("Language is not present",HttpStatus.NOT_FOUND);
+    }
+
+// update language
+
+    public ResponseEntity<?> updateLanguage(Long languageId, String languageName) {
+        Optional<LanguageModel>optionalLanguageModel=languageRepo.findById(languageId);
+        if (optionalLanguageModel.isPresent()){
+            LanguageModel languageModel=optionalLanguageModel.get();
+            languageModel.setLanguageName(languageName);
+            languageRepo.save(languageModel);
+            return new ResponseEntity<>("Language updated successfully",HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Language not found",HttpStatus.NOT_FOUND);
+
+    }
 }

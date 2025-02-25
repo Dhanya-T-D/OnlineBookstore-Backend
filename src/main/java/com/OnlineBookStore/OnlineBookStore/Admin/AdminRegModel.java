@@ -38,6 +38,7 @@ public class AdminRegModel {
     public AdminRegModel(String email,String pasword){
         this.email=email;
         this.password=getPassword();
+
     }
     public Long getAdmin_id() {
         return admin_id;

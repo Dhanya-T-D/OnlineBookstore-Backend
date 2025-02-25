@@ -2,6 +2,7 @@ package com.OnlineBookStore.OnlineBookStore.Admin;
 
 import com.OnlineBookStore.OnlineBookStore.Category.CategoryModel;
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.LoginRequest;
+import com.OnlineBookStore.OnlineBookStore.Language.LanguageModel;
 import com.OnlineBookStore.OnlineBookStore.status.StatusModel;
 import com.OnlineBookStore.OnlineBookStore.Role.RoleModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ public class AdminRegController {
     @Autowired
     private AdminRegService adminRegService;
 
-//    add new admin
-    @PostMapping(path = "/addAdmin")
+//    admin registration
+    @PostMapping(path = "/admin/registration")
     public ResponseEntity<?>addA(@RequestBody AdminRegModel adminRegModel){
         try{
             return adminRegService.addAdmin(adminRegModel);
@@ -31,17 +32,6 @@ public class AdminRegController {
     }
 
 
-////    login
-//    @PostMapping(path = "/Login")
-//    public ResponseEntity<?>log(@RequestParam String email,@RequestParam String password){
-//        try{
-//            return adminRegService.adminLogin(email,password);
-//        }
-//        catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return new ResponseEntity<>("Something Went Wrong",HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
 
     //---------------login--------------------
     @PostMapping(path = "/log")
@@ -54,10 +44,19 @@ public class AdminRegController {
         return new ResponseEntity<>("Invalid Login",HttpStatus.BAD_REQUEST);
     }
 
-
+// forgot password
+    @PutMapping("/forgot/password")
+    public ResponseEntity<?>forgotPassword(@RequestParam String email, @RequestParam String password){
+        try{
+            return adminRegService.forgotPassword(email,password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("Invalid user details",HttpStatus.BAD_REQUEST);
+    }
 
 // update publisher approval
-    @PutMapping(path = "/updatePermission")
+    @PutMapping(path = "/update/permission")
     public ResponseEntity<?>publisherStatus(@RequestParam Long pubId,@RequestParam Long statusId){
         try{
             return adminRegService.updatePermission(pubId,statusId);
@@ -69,7 +68,7 @@ public class AdminRegController {
 
 
 //    add category
-    @PostMapping(path = "/addCategory")
+    @PostMapping(path = "/add/category")
     public ResponseEntity<?>addCat(@RequestBody CategoryModel categoryModel){
         try{
             return adminRegService.addCategory(categoryModel);
@@ -80,7 +79,7 @@ public class AdminRegController {
     }
 
 //    delete category
-    @DeleteMapping(path = "/deleteCategory")
+    @DeleteMapping(path = "/delete/category")
     public ResponseEntity<?>delCat(@RequestParam Long cat_id){
         try{
             return adminRegService.deleteCategory(cat_id);
@@ -91,7 +90,7 @@ public class AdminRegController {
     }
 
 //    update category
-    @PutMapping(path = "/updateCategory")
+    @PutMapping(path = "/update/category")
     public ResponseEntity<?>updateCat(@RequestParam Long cat_id,@RequestParam String cat_name){
         try{
             return adminRegService.updateCategory(cat_id,cat_name);
@@ -102,14 +101,14 @@ public class AdminRegController {
     }
 
 //  display all category
-    @GetMapping(path = "/listCategory")
+    @GetMapping(path = "/list/category")
     public ResponseEntity<List<CategoryModel>>displayCat(){
         return adminRegService.displayCategory();
     }
 
 
 //    add role
-    @PostMapping(path = "/addRole")
+    @PostMapping(path = "/add/role")
     public ResponseEntity<?>addrole(@RequestBody RoleModel roleModel){
         try{
             return adminRegService.addRole(roleModel);
@@ -120,14 +119,14 @@ public class AdminRegController {
     }
 
 //    display role
-    @GetMapping(path = "/displayRole")
+    @GetMapping(path = "/display/role")
     public ResponseEntity<List<RoleModel>>disRole(){
         return adminRegService.displayRole();
     }
 
 
     //    add status
-    @PostMapping(path = "/addstatus")
+    @PostMapping(path = "/add/status")
     public ResponseEntity<?>addstats(@RequestBody StatusModel statusModel){
         try{
             return adminRegService.addingstatus(statusModel);
@@ -138,7 +137,7 @@ public class AdminRegController {
     }
 
 //    update status
-    @PutMapping(path = "/updateStatus")
+    @PutMapping(path = "/update/status")
     public ResponseEntity<?>updateStat(@RequestParam Long statusId, @RequestParam String statusName){
         try{
             return adminRegService.updateStatus(statusId,statusName);
@@ -149,7 +148,7 @@ public class AdminRegController {
     }
 
 //    delete status
-    @DeleteMapping(path = "/deleteStatus")
+    @DeleteMapping(path = "/delete/status")
     public ResponseEntity<?>delStatus(@RequestParam Long statusId){
         try{
             return adminRegService.deleteStatus(statusId);
@@ -160,13 +159,49 @@ public class AdminRegController {
     }
 
 //    display status
-@GetMapping(path = "/displayStatus")
+@GetMapping(path = "/display/status")
     public ResponseEntity<List<StatusModel>>displaySta(){
         return adminRegService.displayStatus();
 }
 
+// add language
+    @PostMapping(path = "/add/language")
+    public ResponseEntity<?>addLanguage(@RequestBody LanguageModel languageModel){
+        try{
+            return adminRegService.addLanguage(languageModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("Something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
+//    display language
+    @GetMapping(path = "/display/language")
+    public ResponseEntity<List<LanguageModel>>listLanguage(){
+        return adminRegService.listLanguage();
+    }
 
+//    delete language
+    @DeleteMapping(path = "/delete/language")
+    public ResponseEntity<?>deleteLanguage(@RequestParam Long languageId){
+        try{
+            return  adminRegService.deleteLanguage(languageId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("Something Went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+//    update language
+    @PutMapping(path = "/update/language")
+    public ResponseEntity<?>updateLanguage(@RequestParam Long languageId, @RequestParam String languageName){
+        try{
+            return adminRegService.updateLanguage(languageId,languageName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("Something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
 
 

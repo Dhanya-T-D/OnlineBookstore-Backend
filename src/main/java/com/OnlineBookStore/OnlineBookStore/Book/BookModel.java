@@ -22,16 +22,17 @@ public class BookModel {
     private Long pubId;
 
     @Column(name = "book_name")
-    private String book_name;
+    private String bookName;
 
     @Column(name = "author")
     private String author;
 
     @Column(name = "cover_image")
-    private byte[] cover_image;
+//    private byte[] cover_image;
+    private String coverImagePath;
 
     @Column(name = "cat_id")
-    private Long cat_id;
+    private Long catId;
 
     @Column(name = "price")
     private BigDecimal price;
@@ -42,8 +43,9 @@ public class BookModel {
     @Column(name = "edition")
     private Integer edition;
 
-    @Column(name = "language")
-    private String language;
+    @Column(name = "languageId")
+    private Long languageId;
+
 
     @Column(name = "availableCopies")
     private Integer availableCopies;
@@ -64,12 +66,12 @@ public class BookModel {
         this.pubId = pubId;
     }
 
-    public String getBook_name() {
-        return book_name;
+    public String getBookName() {
+        return bookName;
     }
 
-    public void setBook_name(String book_name) {
-        this.book_name = book_name;
+    public void setBookName(String bookName) {
+        this.bookName = bookName;
     }
 
     public String getAuthor() {
@@ -80,20 +82,20 @@ public class BookModel {
         this.author = author;
     }
 
-    public byte[] getCover_image() {
-        return cover_image;
+    public String getCoverImagePath() {
+        return coverImagePath;
     }
 
-    public void setCover_image(byte[] cover_image) {
-        this.cover_image = cover_image;
+    public void setCoverImagePath(String coverImagePath) {
+        this.coverImagePath = coverImagePath;
     }
 
-    public Long getCat_id() {
-        return cat_id;
+    public Long getCatId() {
+        return catId;
     }
 
-    public void setCat_id(Long cat_id) {
-        this.cat_id = cat_id;
+    public void setCatId(Long catId) {
+        this.catId = catId;
     }
 
     public BigDecimal getPrice() {
@@ -128,11 +130,11 @@ public class BookModel {
         this.availableCopies = availableCopies;
     }
 
-    public String getLanguage() {
-        return language;
+    public Long getLanguageId() {
+        return languageId;
     }
 
-    public void setLanguage(String language) {
-        this.language = language;
+    public void setLanguageId(Long languageId) {
+        this.languageId = languageId;
     }
 }

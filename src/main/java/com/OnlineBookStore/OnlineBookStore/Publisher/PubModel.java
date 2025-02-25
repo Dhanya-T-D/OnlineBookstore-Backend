@@ -2,6 +2,8 @@ package com.OnlineBookStore.OnlineBookStore.Publisher;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.processing.Pattern;
 import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -23,7 +25,7 @@ public class PubModel {
     private String pub_name;
 
 
-    @Column(name = "phone")
+    @Column(name = "phone" ,unique = true)
     private Long phone;
 
     @Column(name = "email",unique = true, nullable = false)

@@ -48,6 +48,12 @@ public interface BookRepo extends JpaRepository<BookModel,Long> {
 
     List<BookModel> findByAuthorContainingIgnoreCase(String author);
 
+    List<BookModel> findByPubIdAndCatIdAndLanguageId(Long pubId, Long catId, Long languageId);
+
+    List<BookModel> findBypubIdAndBookNameContainingIgnoreCase(Long pubId, String bookName);
+
+    List<BookModel> findBookByCatIdAndLanguageId(Long catId, Long languageId);
+
 
 //    List<BookModel> findBookByYear(Integer year);
 }

@@ -1,10 +1,12 @@
 package com.OnlineBookStore.OnlineBookStore.DtoClasses;
 
+import com.OnlineBookStore.OnlineBookStore.Book.BookModel;
+import com.OnlineBookStore.OnlineBookStore.Offer.OfferModel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import java.math.BigDecimal;
+
 import java.security.PrivateKey;
 import java.time.LocalDate;
 
@@ -23,8 +25,39 @@ public class BookDetailsDto {
     private String publisherName;
     private LocalDate publishedDate;
     private Integer availableCopies;
-    private BigDecimal price;
+    private Double price;
+    private Double offerPercentage;
+    private Double offerPrice;
+    private byte[] coverImage;
 
+
+//    public BookDetailsDto(BookModel bookModel, OfferModel offerModel) {
+//        this.bookId = bookModel.getBookId();
+//        this.bookName = bookModel.getBookName();
+//        this.categoryId = bookModel.getCatId();
+//
+//        this.author = bookModel.getAuthor();
+//        this.publishedDate = bookModel.getPublishedDate();
+//        this.edition = bookModel.getEdition();
+//        this.price = bookModel.getPrice();
+//
+//        if (offerModel != null) {
+//            this.offerPercentage= offerModel.getOfferPercentage();
+//            this.offerPrice = bookModel.getPrice() - (bookModel.getPrice() * offerModel.getOfferPercentage() / 100);
+//        } else {
+//            this.offerPercentage = null;
+//            this.offerPrice = null;
+//        }
+//    }
+
+
+    public Long getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
+    }
 
     public String getBookName() {
         return bookName;
@@ -42,6 +75,14 @@ public class BookDetailsDto {
         this.author = author;
     }
 
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public String getCategory() {
         return category;
     }
@@ -56,6 +97,14 @@ public class BookDetailsDto {
 
     public void setEdition(Integer edition) {
         this.edition = edition;
+    }
+
+    public Long getLanguageId() {
+        return languageId;
+    }
+
+    public void setLanguageId(Long languageId) {
+        this.languageId = languageId;
     }
 
     public String getLanguage() {
@@ -90,35 +139,35 @@ public class BookDetailsDto {
         this.availableCopies = availableCopies;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public Long getBookId() {
-        return bookId;
+    public Double getOfferPercentage() {
+        return offerPercentage;
     }
 
-    public void setBookId(Long bookId) {
-        this.bookId = bookId;
+    public void setOfferPercentage(Double offerPercentage) {
+        this.offerPercentage = offerPercentage;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public Double getOfferPrice() {
+        return offerPrice;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setOfferPrice(Double offerPrice) {
+        this.offerPrice = offerPrice;
     }
 
-    public Long getLanguageId() {
-        return languageId;
+    public byte[] getCoverImage() {
+        return coverImage;
     }
 
-    public void setLanguageId(Long languageId) {
-        this.languageId = languageId;
+    public void setCoverImage(byte[] coverImage) {
+        this.coverImage = coverImage;
     }
 }

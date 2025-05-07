@@ -1,9 +1,11 @@
 package com.OnlineBookStore.OnlineBookStore.Publisher;
 
 import com.OnlineBookStore.OnlineBookStore.Book.BookModel;
+//import com.OnlineBookStore.OnlineBookStore.DtoClasses.AddofferDto;
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.BookDetailsDto;
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.UpdateBookDto;
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.UpdatePublisherDto;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,22 +40,24 @@ public class PubController {
 
     //    add book
     @PostMapping(path = "/add/book")
-    public ResponseEntity<?>addbook(@RequestBody BookModel bookModel){
+    public ResponseEntity<?>addbook(@RequestPart BookModel bookModel, @RequestPart MultipartFile coverImage){
         try{
-            return pubService.addBooks(bookModel);
+            return pubService.addBooks(bookModel,coverImage);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity<>("Something Went Wrong",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
 // update book
 
     @PutMapping(path = "/update/book/details")
-    public ResponseEntity<?>updateBook(@RequestParam Long bookId, @RequestParam Long pubId,@RequestBody UpdateBookDto updateBookDto){
+    public ResponseEntity<?>updateBook(@RequestPart Long bookId,
+                                       @RequestPart Long pubId,
+                                       @RequestPart UpdateBookDto updateBookDto,
+                                       @RequestPart(value = "coverImage", required = false) MultipartFile coverImage){
         try{
-            return pubService.updateBook(bookId,pubId,updateBookDto);
+            return pubService.updateBook(bookId,pubId,updateBookDto,coverImage);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -121,12 +125,49 @@ public class PubController {
         return pubService.searchAuthorName(pubId,author);
     }
 
+//    search book by name
+@GetMapping(path = "/search/book/name")
+public ResponseEntity<List<BookDetailsDto>>searchBookName(@RequestParam Long pubId,@RequestParam String bookName){
+    return pubService.searchBookName(pubId,bookName);
+}
+
 //    search book by language for publisher
 @GetMapping(path = "/search/book/language")
     public ResponseEntity<List<BookDetailsDto>>searchLanguage(@RequestParam Long pubId,@RequestParam Long languageId){
         return pubService.searchLanguage(pubId,languageId);
 }
+// search book by category and language
 
+    @GetMapping("/searchBooksByCatAndLang")
+    public ResponseEntity<List<BookDetailsDto>> searchBooksByCategoryAndLanguage(@RequestParam Long pubId, @RequestParam Long catId, @RequestParam Long languageId) {
+        return pubService.searchBooksByCategoryAndLanguage(pubId, catId, languageId);
+    }
+
+
+// add offer
+
+//@PostMapping("/add/offer")
+//public ResponseEntity<?> addOffer( @RequestParam Long pubId, @RequestBody AddofferDto addofferDto) {
+//
+//    try{
+//        pubService.addOffer(pubId, addofferDto);
+//        return new ResponseEntity<>("Successfully added offer",HttpStatus.OK);
+//    } catch (Exception e) {
+//        e.printStackTrace();
+//        return new ResponseEntity<>("Something Went Wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+//}
+
+//    @PostMapping("/add/offer")
+//    public ResponseEntity<?> addOffer(@RequestParam Long pubId, @RequestBody AddofferDto addofferDto) {
+//        try {
+//            pubService.addOffer(pubId, addofferDto);
+//            return new ResponseEntity<>("Offer added successfully", HttpStatus.OK);
+//        } catch (Exception e) {
+//            logger.error("Error while adding offer", e);
+//            return new ResponseEntity<>("Something Went Wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 
 }

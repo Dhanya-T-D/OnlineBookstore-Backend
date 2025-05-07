@@ -80,6 +80,13 @@ public ResponseEntity<List<BookDetailsDto>>searchByCategory(@RequestParam Long c
 //public ResponseEntity<List<BookDetailsDto>>searchByYear(@RequestParam Integer year){
 //    return userService.searchByYear(year);
 //}
+
+    // search book by category and language
+
+    @GetMapping("/searchBooksByCatAndLang")
+    public ResponseEntity<List<BookDetailsDto>> searchBooksByCategoryAndLanguage( @RequestParam Long catId, @RequestParam Long languageId) {
+        return userService.searchBooksByCategoryAndLanguage(catId, languageId);
+    }
 }
 
 

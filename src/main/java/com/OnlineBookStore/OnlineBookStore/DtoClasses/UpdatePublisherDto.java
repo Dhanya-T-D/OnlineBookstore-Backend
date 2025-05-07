@@ -1,5 +1,6 @@
 package com.OnlineBookStore.OnlineBookStore.DtoClasses;
 
+import com.OnlineBookStore.OnlineBookStore.Publisher.Address;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -12,6 +13,7 @@ public class UpdatePublisherDto {
     private String pub_name;
     private Long phone;
     private String email;
+    private Address address;
 
     public String getPub_name() {
         return pub_name;
@@ -35,5 +37,13 @@ public class UpdatePublisherDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

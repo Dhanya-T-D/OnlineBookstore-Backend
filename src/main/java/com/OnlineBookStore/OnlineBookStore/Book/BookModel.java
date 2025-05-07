@@ -1,5 +1,6 @@
 package com.OnlineBookStore.OnlineBookStore.Book;
 
+import com.OnlineBookStore.OnlineBookStore.Offer.OfferModel;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -27,15 +28,16 @@ public class BookModel {
     @Column(name = "author")
     private String author;
 
-    @Column(name = "cover_image")
-//    private byte[] cover_image;
-    private String coverImagePath;
+    @Lob
+    @Column(name = "coverImage")
+    private byte[] coverImage;
+
 
     @Column(name = "cat_id")
     private Long catId;
 
     @Column(name = "price")
-    private BigDecimal price;
+    private Double price;
 
     @Column(name = "publishedDate")
     private LocalDate publishedDate;
@@ -49,6 +51,11 @@ public class BookModel {
 
     @Column(name = "availableCopies")
     private Integer availableCopies;
+
+//    @Column(name = "discountedPrice ")
+//    private double discountedPrice;
+
+
 
     public Long getBookId() {
         return bookId;
@@ -82,13 +89,6 @@ public class BookModel {
         this.author = author;
     }
 
-    public String getCoverImagePath() {
-        return coverImagePath;
-    }
-
-    public void setCoverImagePath(String coverImagePath) {
-        this.coverImagePath = coverImagePath;
-    }
 
     public Long getCatId() {
         return catId;
@@ -98,11 +98,11 @@ public class BookModel {
         this.catId = catId;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -122,6 +122,14 @@ public class BookModel {
         this.edition = edition;
     }
 
+    public Long getLanguageId() {
+        return languageId;
+    }
+
+    public void setLanguageId(Long languageId) {
+        this.languageId = languageId;
+    }
+
     public Integer getAvailableCopies() {
         return availableCopies;
     }
@@ -130,11 +138,19 @@ public class BookModel {
         this.availableCopies = availableCopies;
     }
 
-    public Long getLanguageId() {
-        return languageId;
+//    public double getDiscountedPrice() {
+//        return discountedPrice;
+//    }
+//
+//    public void setDiscountedPrice(double discountedPrice) {
+//        this.discountedPrice = discountedPrice;
+//    }
+
+    public byte[] getCoverImage() {
+        return coverImage;
     }
 
-    public void setLanguageId(Long languageId) {
-        this.languageId = languageId;
+    public void setCoverImage(byte[] coverImage) {
+        this.coverImage = coverImage;
     }
 }

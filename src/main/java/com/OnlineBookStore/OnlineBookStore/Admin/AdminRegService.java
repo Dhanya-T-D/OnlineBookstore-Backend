@@ -63,6 +63,7 @@ public class AdminRegService {
 
 
     //   --------------login---------------------------
+    
 
     public ResponseEntity<?> login(LoginRequest loginRequest) {
         Optional<UserModel> userModelOptional = userRepo.findByEmailAndPassword(loginRequest.getEmail(), loginRequest.getPassword());

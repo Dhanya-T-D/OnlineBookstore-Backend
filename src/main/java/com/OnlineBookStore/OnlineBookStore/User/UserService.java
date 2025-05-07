@@ -97,6 +97,7 @@ public class UserService {
 
                 bookDetailsDto.setAvailableCopies(bookModel.getAvailableCopies());
                 bookDetailsDto.setPrice(bookModel.getPrice());
+                bookDetailsDto.setCoverImage(bookModel.getCoverImage());
 
                 bookDetailsDtoList.add(bookDetailsDto);
             }
@@ -145,7 +146,7 @@ public class UserService {
 
                 bookDetailsDto.setAvailableCopies(bookModel.getAvailableCopies());
                 bookDetailsDto.setPrice(bookModel.getPrice());
-
+                bookDetailsDto.setCoverImage(bookModel.getCoverImage());
                 bookDetailsDtoList.add(bookDetailsDto);
             }
         }
@@ -193,7 +194,7 @@ public class UserService {
 
                 bookDetailsDto.setAvailableCopies(bookModel.getAvailableCopies());
                 bookDetailsDto.setPrice(bookModel.getPrice());
-
+                bookDetailsDto.setCoverImage(bookModel.getCoverImage());
                 bookDetailsDtoList.add(bookDetailsDto);
             }
         }
@@ -240,6 +241,7 @@ public class UserService {
 
                 bookDetailsDto.setAvailableCopies(bookModel.getAvailableCopies());
                 bookDetailsDto.setPrice(bookModel.getPrice());
+                bookDetailsDto.setCoverImage(bookModel.getCoverImage());
 
                 bookDetailsDtoList.add(bookDetailsDto);
             }
@@ -288,6 +290,7 @@ public class UserService {
 
                 bookDetailsDto.setAvailableCopies(bookModel.getAvailableCopies());
                 bookDetailsDto.setPrice(bookModel.getPrice());
+                bookDetailsDto.setCoverImage(bookModel.getCoverImage());
 
                 bookDetailsDtoList.add(bookDetailsDto);
             }
@@ -335,6 +338,7 @@ public class UserService {
 
                 bookDetailsDto.setAvailableCopies(bookModel.getAvailableCopies());
                 bookDetailsDto.setPrice(bookModel.getPrice());
+                bookDetailsDto.setCoverImage(bookModel.getCoverImage());
 
                 bookDetailsDtoList.add(bookDetailsDto);
             }
@@ -382,6 +386,55 @@ public class UserService {
 
                 bookDetailsDto.setAvailableCopies(bookModel.getAvailableCopies());
                 bookDetailsDto.setPrice(bookModel.getPrice());
+                bookDetailsDto.setCoverImage(bookModel.getCoverImage());
+
+                bookDetailsDtoList.add(bookDetailsDto);
+            }
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(bookDetailsDtoList, HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<BookDetailsDto>> searchBooksByCategoryAndLanguage(Long catId, Long languageId) {
+
+        List<BookModel> bookModels = bookRepo.findBookByCatIdAndLanguageId(catId,languageId);
+        List<BookDetailsDto> bookDetailsDtoList = new ArrayList<>();
+        if (!bookModels.isEmpty()) {
+            for (BookModel bookModel : bookModels) {
+                BookDetailsDto bookDetailsDto = new BookDetailsDto();
+                bookDetailsDto.setBookId(bookModel.getBookId());
+                bookDetailsDto.setBookName(bookModel.getBookName());
+                bookDetailsDto.setAuthor(bookModel.getAuthor());
+                bookDetailsDto.setLanguageId(bookModel.getLanguageId());
+
+                Optional<LanguageModel> optionalLanguageModel = languageRepo.findById(bookModel.getLanguageId());
+                if (optionalLanguageModel.isPresent()) {
+                    LanguageModel languageModel = optionalLanguageModel.get();
+                    bookDetailsDto.setLanguage(languageModel.getLanguageName());
+                }
+
+                bookDetailsDto.setEdition(bookModel.getEdition());
+                bookDetailsDto.setPublishedDate(bookModel.getPublishedDate());
+                bookDetailsDto.setCategoryId(bookModel.getCatId());
+
+                Optional<CategoryModel> categoryModelOptional = categoryRepo.findById(bookModel.getCatId());
+                if (categoryModelOptional.isPresent()) {
+                    CategoryModel categoryModel = categoryModelOptional.get();
+                    bookDetailsDto.setCategory(categoryModel.getCatName());
+                }
+
+
+                Optional<PubModel> pubModelOptional = pubRepo.findById(bookModel.getPubId());
+                if (pubModelOptional.isPresent()) {
+                    PubModel pubModel = pubModelOptional.get();
+                    bookDetailsDto.setPublisherName(pubModel.getPub_name());
+                }
+
+                bookDetailsDto.setAvailableCopies(bookModel.getAvailableCopies());
+                bookDetailsDto.setPrice(bookModel.getPrice());
+                bookDetailsDto.setCoverImage(bookModel.getCoverImage());
 
                 bookDetailsDtoList.add(bookDetailsDto);
             }

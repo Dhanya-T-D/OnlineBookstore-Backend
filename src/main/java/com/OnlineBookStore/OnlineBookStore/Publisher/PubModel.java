@@ -1,11 +1,14 @@
 package com.OnlineBookStore.OnlineBookStore.Publisher;
 
+import com.OnlineBookStore.OnlineBookStore.Offer.OfferModel;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.processing.Pattern;
 import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+
+import java.util.List;
 
 @Entity
 @Table(name = "Publisher_Registration")
@@ -43,8 +46,14 @@ public class PubModel {
     @Column(name = "statusId")
     private Long statusId;
 
+//    @Lob  // Store large binary objects
 //    @Column(name = "licenseImage")
 //    private  byte[] licenseImage;
+
+
+//    @OneToMany(mappedBy = "pubId", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<OfferModel> offers;
+
 
     public PubModel(){
         this.roleid=2L;

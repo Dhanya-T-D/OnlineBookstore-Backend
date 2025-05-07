@@ -1,5 +1,7 @@
 package com.OnlineBookStore.OnlineBookStore.DtoClasses;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,9 +19,11 @@ public class UpdateBookDto {
     private  String bookName;
     private Long catId;
     private Long languageId;
-    private BigDecimal price;
+    private Double price;
     private LocalDate publishedDate;
     private Integer edition;
+//    @Lob
+//    private byte[] coverImage;
 
 
     public String getAuthor() {
@@ -62,11 +66,11 @@ public class UpdateBookDto {
         this.languageId = languageId;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
@@ -85,4 +89,12 @@ public class UpdateBookDto {
     public void setEdition(Integer edition) {
         this.edition = edition;
     }
+
+//    public byte[] getCoverImage() {
+//        return coverImage;
+//    }
+//
+//    public void setCoverImage(byte[] coverImage) {
+//        this.coverImage = coverImage;
+//    }
 }

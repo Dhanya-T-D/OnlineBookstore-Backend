@@ -5,12 +5,15 @@ import com.OnlineBookStore.OnlineBookStore.Book.BookRepo;
 import com.OnlineBookStore.OnlineBookStore.Category.CategoryModel;
 import com.OnlineBookStore.OnlineBookStore.Category.CategoryRepo;
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.BookDetailsDto;
+import com.OnlineBookStore.OnlineBookStore.DtoClasses.PublisherRegistrationDto;
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.UpdateBookDto;
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.UpdatePublisherDto;
 import com.OnlineBookStore.OnlineBookStore.Language.LanguageModel;
 import com.OnlineBookStore.OnlineBookStore.Language.LanguageRepo;
 import com.OnlineBookStore.OnlineBookStore.Offer.OfferRepo;
 import com.OnlineBookStore.OnlineBookStore.User.UserRepo;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 public class PubService {
@@ -38,8 +42,9 @@ public class PubService {
     @Autowired
     private OfferRepo offerRepo;
 
+
     //    Publisher Registration
-    public ResponseEntity<?> publisherReg(PubModel pubModel) {
+    public ResponseEntity<?> publisherReg(PubModel pubModel, MultipartFile license_image) throws  IOException{
         PubModel pubModel1 = new PubModel();
         pubModel1.setRoleid(pubModel.getRoleid());
         pubModel1.setPub_name(pubModel.getPub_name());
@@ -51,17 +56,16 @@ public class PubService {
         pubModel1.setEmail(pubModel.getEmail());
         pubModel1.setPassword(pubModel.getPassword());
         pubModel1.setLicense_no(pubModel.getLicense_no());
-//        pubModel1.setLicenseImage(pubModel.getLicenseImage());
-//        pubModel1.setLicenseImage(pubModel.getLicenseImage());
-
-
+        pubModel1.setLicense_image(license_image.getBytes());
         pubRepo.save(pubModel1);
         return new ResponseEntity<>(pubModel1, HttpStatus.OK);
     }
 
+
     public boolean isEmailAlreadyRegistered(String email) {
         return (pubRepo.existsByEmail(email) || userRepo.existsByEmail(email));
     }
+
 
 
     //    add books
@@ -86,28 +90,72 @@ public class PubService {
 
 
 // update book details
+//
+//    public ResponseEntity<?> updateBook(Long bookId, Long pubId, UpdateBookDto updateBookDto, MultipartFile coverImage) throws IOException {
+//        Optional<BookModel> bookModelOptional = bookRepo.findByBookIdAndPubId(bookId, pubId);
+//
+//        if (bookModelOptional.isPresent()) {
+//
+//            BookModel bookModel = bookModelOptional.get();
+//            bookModel.setAuthor(updateBookDto.getAuthor());
+//            bookModel.setAvailableCopies(updateBookDto.getAvailableCopies());
+//            bookModel.setBookName(updateBookDto.getBookName());
+//            bookModel.setCatId(updateBookDto.getCatId());
+//            bookModel.setPrice(updateBookDto.getPrice());
+//            bookModel.setPublishedDate(updateBookDto.getPublishedDate());
+//            bookModel.setEdition(updateBookDto.getEdition());
+//            bookModel.setLanguageId(updateBookDto.getLanguageId());
+////            bookModel.setCoverImage(updateBookDto.getCoverImage());
+//            bookModel.setCoverImage(coverImage.getBytes());
+//
+//            bookRepo.save(bookModel);
+//            return new ResponseEntity<>(bookModel, HttpStatus.OK);
+//        }
+//        return new ResponseEntity<>("Book Not Found", HttpStatus.NOT_FOUND);
+//    }
 
-    public ResponseEntity<?> updateBook(Long bookId, Long pubId, UpdateBookDto updateBookDto, MultipartFile coverImage) throws IOException {
-        Optional<BookModel> bookModelOptional = bookRepo.findByBookIdAndPubId(bookId, pubId);
 
-        if (bookModelOptional.isPresent()) {
+    public ResponseEntity<?> updateBookDetails(Long bookId, Long pubId, String bookName, String author,
+                                               Double price, Integer edition, Integer availableCopies,
+                                               LocalDate publishedDate, Long catId, Long languageId,
+                                               MultipartFile coverImage) throws IOException {
 
-            BookModel bookModel = bookModelOptional.get();
-            bookModel.setAuthor(updateBookDto.getAuthor());
-            bookModel.setAvailableCopies(updateBookDto.getAvailableCopies());
-            bookModel.setBookName(updateBookDto.getBookName());
-            bookModel.setCatId(updateBookDto.getCatId());
-            bookModel.setPrice(updateBookDto.getPrice());
-            bookModel.setPublishedDate(updateBookDto.getPublishedDate());
-            bookModel.setEdition(updateBookDto.getEdition());
-            bookModel.setLanguageId(updateBookDto.getLanguageId());
-//            bookModel.setCoverImage(updateBookDto.getCoverImage());
-            bookModel.setCoverImage(coverImage.getBytes());
+        Optional<BookModel>bookModelOptional=bookRepo.findByBookIdAndPubId(bookId, pubId);
+        if(bookModelOptional.isPresent()){
+            BookModel bookModel=bookModelOptional.get();
+            if(bookName!=null && !bookName.isEmpty()){
+                bookModel.setBookName(bookName);
+            }
+            if(author!=null && !author.isEmpty()){
+                bookModel.setAuthor(author);
+            }
+            if(price!=null){
+                bookModel.setPrice(price);
+            }
+            if(edition!=null){
+                bookModel.setEdition(edition);
+            }
+            if(availableCopies!=null){
+                bookModel.setAvailableCopies(availableCopies);
+            }
+            if(publishedDate!=null){
+                bookModel.setPublishedDate(publishedDate);
+            }
+            if(catId!=null){
+                bookModel.setCatId(catId);
+            }
+            if(languageId!=null){
+                bookModel.setLanguageId(languageId);
+            }
 
+            if (coverImage != null && !coverImage.isEmpty()) {
+                bookModel.setCoverImage(coverImage.getBytes());
+            }
             bookRepo.save(bookModel);
-            return new ResponseEntity<>(bookModel, HttpStatus.OK);
+            return new ResponseEntity<>(bookModel,HttpStatus.OK);
         }
-        return new ResponseEntity<>("Book Not Found", HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>("Updation Failed",HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
@@ -528,6 +576,8 @@ public class PubService {
         }
         return new ResponseEntity<>(bookDetailsDtoList, HttpStatus.OK);
     }
+
+
 
 //     add offer
 //

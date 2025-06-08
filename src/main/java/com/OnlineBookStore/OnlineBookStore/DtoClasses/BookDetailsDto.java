@@ -22,6 +22,7 @@ public class BookDetailsDto {
     private Integer edition;
     private Long languageId;
     private String language;
+    private Long publisherId;
     private String publisherName;
     private LocalDate publishedDate;
     private Integer availableCopies;
@@ -169,5 +170,13 @@ public class BookDetailsDto {
 
     public void setCoverImage(byte[] coverImage) {
         this.coverImage = coverImage;
+    }
+
+    public Long getPublisherId() {
+        return publisherId;
+    }
+
+    public void setPublisherId(Long publisherId) {
+        this.publisherId = publisherId;
     }
 }

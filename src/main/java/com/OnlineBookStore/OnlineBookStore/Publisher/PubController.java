@@ -3,11 +3,13 @@ package com.OnlineBookStore.OnlineBookStore.Publisher;
 import com.OnlineBookStore.OnlineBookStore.Book.BookModel;
 //import com.OnlineBookStore.OnlineBookStore.DtoClasses.AddofferDto;
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.BookDetailsDto;
+import com.OnlineBookStore.OnlineBookStore.DtoClasses.PublisherRegistrationDto;
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.UpdateBookDto;
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.UpdatePublisherDto;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,14 +31,17 @@ public class PubController {
 //    Publisher Registration
 
     @PostMapping(path = "/Registration")
-    public ResponseEntity<?> preg(@RequestBody PubModel pubModel){
+    public ResponseEntity<?> publisherRegistration(@RequestPart PubModel pubModel, @RequestPart MultipartFile license_image){
         try{
-            return pubService.publisherReg(pubModel);
+            return pubService.publisherReg(pubModel,license_image);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return new ResponseEntity<>("Something Went Wrong", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
+
 
     //    add book
     @PostMapping(path = "/add/book")
@@ -51,19 +56,45 @@ public class PubController {
 
 // update book
 
+//    @PutMapping(path = "/update/book/details")
+//    public ResponseEntity<?>updateBook(@RequestPart Long bookId,
+//                                       @RequestPart Long pubId,
+//                                       @RequestPart UpdateBookDto updateBookDto,
+//                                       @RequestPart(value = "coverImage", required = false) MultipartFile coverImage){
+//        try{
+//            return pubService.updateBook(bookId,pubId,updateBookDto,coverImage);
+//        }
+//        catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return new ResponseEntity<>("Something Went Wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
+
     @PutMapping(path = "/update/book/details")
-    public ResponseEntity<?>updateBook(@RequestPart Long bookId,
-                                       @RequestPart Long pubId,
-                                       @RequestPart UpdateBookDto updateBookDto,
-                                       @RequestPart(value = "coverImage", required = false) MultipartFile coverImage){
+    public ResponseEntity<?> updateBook(
+            @RequestParam("bookId") Long bookId,
+            @RequestParam("pubId") Long pubId,
+            @RequestParam(required = false) String bookName,
+            @RequestParam(required = false) String author,
+            @RequestParam(required = false) Double price,
+            @RequestParam(required = false) Integer edition,
+            @RequestParam(required = false) Integer availableCopies,
+            @RequestParam(required = false) LocalDate publishedDate,
+            @RequestParam(required = false) Long catId,
+            @RequestParam(required = false) Long languageId,
+            @RequestPart(required = false) MultipartFile coverImage
+    )
+    {
         try{
-            return pubService.updateBook(bookId,pubId,updateBookDto,coverImage);
+            return pubService.updateBookDetails(bookId,pubId,bookName,author,price,edition,availableCopies,
+                    publishedDate,catId,languageId,coverImage);
         }
         catch (Exception e){
             e.printStackTrace();
         }
         return new ResponseEntity<>("Something Went Wrong",HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
 
 
 //    --------------------delete book----------------------------------------------------

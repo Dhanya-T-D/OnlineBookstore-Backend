@@ -24,11 +24,11 @@ public class PubModel {
     @Column(name = "roleid")
     private Long roleid;
 
-    @Column(name = "pub_name")
+    @Column(name = "pub_name", nullable = false)
     private String pub_name;
 
 
-    @Column(name = "phone" ,unique = true)
+    @Column(name = "phone" ,unique = true, nullable = false)
     private Long phone;
 
     @Column(name = "email",unique = true, nullable = false)
@@ -37,22 +37,19 @@ public class PubModel {
     @Embedded
     private Address address;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "license_no")
+    @Column(name = "license_no", nullable = false)
     private String license_no;
 
     @Column(name = "statusId")
     private Long statusId;
 
-//    @Lob  // Store large binary objects
-//    @Column(name = "licenseImage")
-//    private  byte[] licenseImage;
+    @Lob
+    @Column(name = "license_image")
+    private byte[] license_image;
 
-
-//    @OneToMany(mappedBy = "pubId", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<OfferModel> offers;
 
 
     public PubModel(){
@@ -129,13 +126,13 @@ public class PubModel {
         this.statusId = statusId;
     }
 
-//    public byte[] getLicenseImage() {
-//        return licenseImage;
-//    }
-//
-//    public void setLicenseImage(byte[] licenseImage) {
-//        this.licenseImage = licenseImage;
-//    }
+    public byte[] getLicense_image() {
+        return license_image;
+    }
+
+    public void setLicense_image(byte[] license_image) {
+        this.license_image = license_image;
+    }
 
     public Address getAddress() {
         return address;

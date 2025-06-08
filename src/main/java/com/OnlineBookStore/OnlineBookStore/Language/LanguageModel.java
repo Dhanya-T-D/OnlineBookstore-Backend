@@ -15,7 +15,7 @@ public class LanguageModel {
     @Column(name = "languageId")
     private Long languageId;
 
-    @Column(name = "languageName")
+    @Column(name = "languageName", nullable = false)
     private String languageName;
 
     public Long getLanguageId() {

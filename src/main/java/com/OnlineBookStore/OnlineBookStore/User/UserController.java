@@ -1,10 +1,13 @@
 package com.OnlineBookStore.OnlineBookStore.User;
 
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.BookDetailsDto;
+import com.OnlineBookStore.OnlineBookStore.DtoClasses.UpdateBookDto;
+import com.OnlineBookStore.OnlineBookStore.DtoClasses.UserDetailsDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -75,11 +78,7 @@ public ResponseEntity<List<BookDetailsDto>>searchByCategory(@RequestParam Long c
         return userService.searchByAuthor(author);
     }
 
-////  search book by year
-//@GetMapping(path = "/search/year")
-//public ResponseEntity<List<BookDetailsDto>>searchByYear(@RequestParam Integer year){
-//    return userService.searchByYear(year);
-//}
+
 
     // search book by category and language
 
@@ -87,6 +86,25 @@ public ResponseEntity<List<BookDetailsDto>>searchByCategory(@RequestParam Long c
     public ResponseEntity<List<BookDetailsDto>> searchBooksByCategoryAndLanguage( @RequestParam Long catId, @RequestParam Long languageId) {
         return userService.searchBooksByCategoryAndLanguage(catId, languageId);
     }
+
+//    edit user details
+@PutMapping(path = "/edit/user/details")
+public ResponseEntity<?>editUserDetails(@RequestParam Long userid,@RequestParam String username,@RequestParam String email,@RequestParam String phone){
+    try{
+        return userService.editUserDetails(userid,username,email,phone);
+    }
+    catch (Exception e){
+        e.printStackTrace();
+    }
+    return new ResponseEntity<>("Something Went Wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+}
+
+//fetch user details
+@GetMapping(path = "/display/user/details")
+public ResponseEntity<List<UserDetailsDto>> displayUser(@RequestParam Long userid){
+    return userService.displayUser(userid);
+}
+
 }
 
 

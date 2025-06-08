@@ -14,7 +14,7 @@ public class CategoryModel {
     @Column(name = "cat_id")
     private Long catId;
 
-    @Column(name = "cat_name")
+    @Column(name = "cat_name",nullable = false)
     private String catName;
 
     public Long getCatId() {

@@ -22,8 +22,7 @@ public class UpdateBookDto {
     private Double price;
     private LocalDate publishedDate;
     private Integer edition;
-//    @Lob
-//    private byte[] coverImage;
+
 
 
     public String getAuthor() {
@@ -90,11 +89,5 @@ public class UpdateBookDto {
         this.edition = edition;
     }
 
-//    public byte[] getCoverImage() {
-//        return coverImage;
-//    }
-//
-//    public void setCoverImage(byte[] coverImage) {
-//        this.coverImage = coverImage;
-//    }
+
 }

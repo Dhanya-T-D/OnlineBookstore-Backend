@@ -1,14 +1,20 @@
 package com.OnlineBookStore.OnlineBookStore.Admin;
 
 import com.OnlineBookStore.OnlineBookStore.Category.CategoryModel;
+import com.OnlineBookStore.OnlineBookStore.DtoClasses.BookDetailsDto;
+import com.OnlineBookStore.OnlineBookStore.DtoClasses.DashboardStatsDto;
 import com.OnlineBookStore.OnlineBookStore.DtoClasses.LoginRequest;
+import com.OnlineBookStore.OnlineBookStore.DtoClasses.UpdateBookDto;
 import com.OnlineBookStore.OnlineBookStore.Language.LanguageModel;
+import com.OnlineBookStore.OnlineBookStore.Publisher.PubModel;
+import com.OnlineBookStore.OnlineBookStore.User.UserModel;
 import com.OnlineBookStore.OnlineBookStore.status.StatusModel;
 import com.OnlineBookStore.OnlineBookStore.Role.RoleModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 @CrossOrigin
@@ -43,6 +49,8 @@ public class AdminRegController {
         }
         return new ResponseEntity<>("Invalid Login",HttpStatus.BAD_REQUEST);
     }
+
+
 
 // forgot password
     @PutMapping("/forgot/password")
@@ -160,8 +168,10 @@ public class AdminRegController {
 
 //    display status
 @GetMapping(path = "/display/status")
-    public ResponseEntity<List<StatusModel>>displaySta(){
+    public ResponseEntity<List<StatusModel>>displaySta()
+{
         return adminRegService.displayStatus();
+
 }
 
 // add language
@@ -178,6 +188,7 @@ public class AdminRegController {
 //    display language
     @GetMapping(path = "/display/language")
     public ResponseEntity<List<LanguageModel>>listLanguage(){
+
         return adminRegService.listLanguage();
     }
 
@@ -202,7 +213,69 @@ public class AdminRegController {
         }
         return new ResponseEntity<>("Something went wrong",HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+//    dashboard stats
+@GetMapping("/dashboard-stats")
+public ResponseEntity<DashboardStatsDto> getDashboardStats() {
+    DashboardStatsDto stats = adminRegService.getDashboardStats();
+    return ResponseEntity.ok(stats);
 }
+
+// update book
+
+    @PutMapping(path = "/update/book")
+    public ResponseEntity<?>updateBook(@RequestPart Long bookId,@RequestPart UpdateBookDto updateBookDto,
+                                       @RequestPart(value = "coverImage", required = false) MultipartFile coverImage){
+        try{
+            return adminRegService.updateBook(bookId,updateBookDto,coverImage);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("Something Went Wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+
+//    --------------------delete book----------------------------------------------------
+
+    @DeleteMapping(path = "/delete/book")
+    public ResponseEntity<?>delBook(@RequestParam Long bookId){
+        try{
+            return  adminRegService.bookDeletion(bookId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("Something Went Wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+//    list all publishers
+@GetMapping(path = "/display/publishers")
+public ResponseEntity<List<PubModel>>listPublisher(){
+
+    return adminRegService.listPublisher();
+}
+
+// list all users
+
+    @GetMapping(path = "/display/users")
+    public ResponseEntity<List<UserModel>>listUser(){
+
+        return adminRegService.listUser();
+    }
+
+//    delete publisher
+
+    @DeleteMapping(path = "/delete/publisher")
+    public ResponseEntity<?>deletePublisher(@RequestParam Long pubId){
+        try{
+            return  adminRegService.deletePublisher(pubId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("Something Went Wrong",HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+
 
 
 

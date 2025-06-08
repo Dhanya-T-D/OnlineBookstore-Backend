@@ -1,13 +1,14 @@
 package com.OnlineBookStore.OnlineBookStore.Admin;
 
+import com.OnlineBookStore.OnlineBookStore.Book.BookModel;
+import com.OnlineBookStore.OnlineBookStore.Book.BookRepo;
 import com.OnlineBookStore.OnlineBookStore.Category.CategoryModel;
 import com.OnlineBookStore.OnlineBookStore.Category.CategoryRepo;
-import com.OnlineBookStore.OnlineBookStore.DtoClasses.LoginRequest;
+import com.OnlineBookStore.OnlineBookStore.DtoClasses.*;
 import com.OnlineBookStore.OnlineBookStore.Language.LanguageModel;
 import com.OnlineBookStore.OnlineBookStore.Language.LanguageRepo;
 import com.OnlineBookStore.OnlineBookStore.status.StatusModel;
 import com.OnlineBookStore.OnlineBookStore.status.StatusRepo;
-import com.OnlineBookStore.OnlineBookStore.DtoClasses.LoginDto;
 import com.OnlineBookStore.OnlineBookStore.Publisher.PubModel;
 import com.OnlineBookStore.OnlineBookStore.Publisher.PubRepo;
 import com.OnlineBookStore.OnlineBookStore.Role.RoleModel;
@@ -20,8 +21,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.IIOException;
 import javax.management.openmbean.OpenMBeanInfo;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +52,9 @@ public class AdminRegService {
 
     @Autowired
     private LanguageRepo languageRepo;
+
+    @Autowired
+    private BookRepo bookRepo;
 
 
 
@@ -298,5 +306,77 @@ public class AdminRegService {
         }
         return new ResponseEntity<>("Language not found",HttpStatus.NOT_FOUND);
 
+    }
+
+//    dashboard stats
+
+    public  DashboardStatsDto getDashboardStats() {
+        DashboardStatsDto stats = new DashboardStatsDto();
+
+        stats.setTotalUsers((int) userRepo.count());
+        stats.setTotalPublishers((int) pubRepo.count());
+        stats.setTotalBooks((int) bookRepo.count());
+//        stats.setTotalOrders((int) orderRepository.count());
+
+        return stats;
+    }
+
+// update book
+
+    public ResponseEntity<?> updateBook(Long bookId,UpdateBookDto updateBookDto, MultipartFile coverImage) throws IOException {
+        Optional<BookModel>bookModelOptional=bookRepo.findById(bookId);
+        if (bookModelOptional.isPresent()) {
+
+            BookModel bookModel = bookModelOptional.get();
+            bookModel.setAuthor(updateBookDto.getAuthor());
+            bookModel.setAvailableCopies(updateBookDto.getAvailableCopies());
+            bookModel.setBookName(updateBookDto.getBookName());
+            bookModel.setCatId(updateBookDto.getCatId());
+            bookModel.setPrice(updateBookDto.getPrice());
+            bookModel.setPublishedDate(updateBookDto.getPublishedDate());
+            bookModel.setEdition(updateBookDto.getEdition());
+            bookModel.setLanguageId(updateBookDto.getLanguageId());
+            bookModel.setCoverImage(coverImage.getBytes());
+
+            bookRepo.save(bookModel);
+            return new ResponseEntity<>(bookModel, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Book Not Found", HttpStatus.NOT_FOUND);
+    }
+
+//     delete book
+
+    public ResponseEntity<?> bookDeletion(Long bookId) {
+        Optional<BookModel> bookModelOptional = bookRepo.findById(bookId);
+        if (bookModelOptional.isPresent()) {
+            BookModel bookModel = bookModelOptional.get();
+            bookRepo.delete(bookModel);
+            return new ResponseEntity<>("Book deleted successfully", HttpStatus.OK);
+        } else
+            return new ResponseEntity<>("Book not found", HttpStatus.NOT_FOUND);
+    }
+
+//     list all publishers
+    public ResponseEntity<List<PubModel>> listPublisher() {
+        List<PubModel>pubModels=pubRepo.findAll();
+        return new ResponseEntity<>(pubModels,HttpStatus.OK);
+    }
+
+//     list all users
+
+    public ResponseEntity<List<UserModel>> listUser() {
+        List<UserModel>userModels=userRepo.findAll();
+        return new ResponseEntity<>(userModels,HttpStatus.OK);
+    }
+
+//     delete publisher
+    public ResponseEntity<?> deletePublisher(Long pubId) {
+        Optional<PubModel> pubModelOptional = pubRepo.findById(pubId);
+        if (pubModelOptional.isPresent()) {
+            PubModel pubModel = pubModelOptional.get();
+            pubRepo.delete(pubModel);
+            return new ResponseEntity<>(" deleted successfully", HttpStatus.OK);
+        } else
+            return new ResponseEntity<>("Publisher  not found", HttpStatus.NOT_FOUND);
     }
 }

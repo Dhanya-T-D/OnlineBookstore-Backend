@@ -38,8 +38,8 @@ public class OrderModel {
     @Column(name = "quantity")
     private int quantity;
 
-    @Column(name = "price")
-    private double price;
+    @Column(name = "bookPrice")
+    private double bookPrice;
 
     @Column(name = "totalPrice")
     private double totalPrice;
@@ -123,12 +123,12 @@ public class OrderModel {
         this.publisherShare = publisherShare;
     }
 
-    public double getPrice() {
-        return price;
+    public double getBookPrice() {
+        return bookPrice;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setBookPrice(double bookPrice) {
+        this.bookPrice = bookPrice;
     }
 
     public LocalDate getOrderDate() {

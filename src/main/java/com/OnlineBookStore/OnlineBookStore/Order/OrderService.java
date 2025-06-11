@@ -31,7 +31,15 @@ public class OrderService {
     private BookRepo bookRepo;
 
     public ResponseEntity<?> placeOrder(Long userid, Long bookId, int quantity,
-                                                 String name, Long phone, String address) {
+                                        String name, Long phone, String address) {
+
+        if (name == null || name.trim().isEmpty() ||
+                phone == null || String.valueOf(phone).length() != 10 ||
+                address == null || address.trim().isEmpty()) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("Invalid name, phone, or address");
+        }
 
         BookModel bookModel = bookRepo.findById(bookId)
                 .orElseThrow(() -> new RuntimeException("Book not found"));
@@ -40,17 +48,21 @@ public class OrderService {
             throw new RuntimeException("Sold Out or Not enough copies available");
         }
 
-        double bookPrice = bookModel.getPrice() * quantity;
-        double adminShare = bookPrice * 0.10;
-        double publisherShare = bookPrice * 0.90;
+        double bookPrice = bookModel.getPrice();
+        double shippingCharge = 50;
+        double basePrice = bookPrice * quantity;
+        double totalPrice = basePrice + shippingCharge;
+
+        double adminShare = basePrice * 0.10;
+        double publisherShare = basePrice * 0.90;
 
         OrderModel orderModel = new OrderModel();
         orderModel.setUserid(userid);
         orderModel.setBookId(bookId);
         orderModel.setPubId(bookModel.getPubId());
         orderModel.setQuantity(quantity);
-        orderModel.setPrice(bookModel.getPrice());
-        orderModel.setTotalPrice(bookPrice);
+        orderModel.setBookPrice(bookPrice);
+        orderModel.setTotalPrice(totalPrice);
         orderModel.setAdminShare(adminShare);
         orderModel.setPublisherShare(publisherShare);
         orderModel.setOrderDate(LocalDate.now());
@@ -64,12 +76,13 @@ public class OrderService {
         bookRepo.save(bookModel);
 
         // Save order
-         orderRepo.save(orderModel);
-
-         return new ResponseEntity<>(orderModel, HttpStatus.OK);
+        orderRepo.save(orderModel);
 
 
+
+        return new ResponseEntity<>(orderModel, HttpStatus.OK);
     }
+
 
 //    display order details
 
